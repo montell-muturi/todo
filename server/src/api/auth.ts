@@ -16,7 +16,7 @@ const authUser = async (req: Request, res: Response, nextFn: NextFunction) => {
   let authType = req.body["authType"];
 
   let userData: IUser = {
-    email: req.body["email"] as string,
+    email: (req.body["email"] as string).toLowerCase(),
     password: req.body["password"] as string,
   };
 
