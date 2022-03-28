@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  client:
+    container_name: "client"
+    image: montymuturi/todo-client
+    build:
+      context: ./client/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    links:
+      - "server"
+  server:
+    container_name: "server"
+    image: montymuturi/todo-server
+    build:
+      context: ./server/
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - database:/todo
+    links:
+      - "db"
+  db:
+    container_name: "db"
+    image: "montymuturi/mongo"
+    build:
+      context: ./mongo/
+      dockerfile: Dockerfile
+    ports:
+      - "27017:27017"
+    volumes:
+      - database:/todo
+
+volumes:
+  database:
