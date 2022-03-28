@@ -1,6 +1,8 @@
 import { ObjectID } from "bson";
 import { IErrorResponse } from "./api/types";
 
+const bcrypt = require("bcrypt");
+
 export const validateId = (id: string) => {
   if (id == null)
     return <IErrorResponse>{
@@ -21,3 +23,6 @@ export const validateId = (id: string) => {
     };
   return true;
 };
+
+export const validatePassword = (password: string, passwordHash: string) =>
+  bcrypt.compare(password, passwordHash, (err: any, result: boolean) => result);

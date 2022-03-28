@@ -1,28 +1,26 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose, { Document } from "mongoose";
 import TodoModel from "../models/todo";
-import { validateId } from "../utils";
+import { validateId, validatePassword } from "../utils";
 
 const bcrypt = require("bcrypt");
 
-import { IUser, ITodos } from "../models/types";
+import { IUser } from "../models/types";
 import UserModel from "../models/user";
 import { IErrorResponse } from "./types";
-import { ObjectId } from "mongodb";
 
 const userModel = UserModel;
 const todoModel = TodoModel;
 
 const authUser = async (req: Request, res: Response, nextFn: NextFunction) => {
-  let authType = req.query["authType"];
+  let authType = req.body["authType"];
 
   let userData: IUser = {
-    email: req.query["email"] as string,
-    password: req.query["password"] as string,
+    email: req.body["email"] as string,
+    password: req.body["password"] as string,
   };
 
-  if (req.query["username"])
-    userData.username = req.query["username"] as string;
+  if (req.body["username"]) userData.username = req.body["username"] as string;
 
   if (userData.email == null || userData.password == null)
     return res.json(<IErrorResponse>{
@@ -32,13 +30,19 @@ const authUser = async (req: Request, res: Response, nextFn: NextFunction) => {
 
   if (authType === "login") {
     let queryResult: Document = await checkUser(userData);
+
     if (queryResult == null)
       return res.json(<IErrorResponse>{
         code: 1.2,
         message: "No user found matching given parameters.",
       });
 
-    if (userData.password !== queryResult.get("password"))
+    if (
+      validatePassword(
+        req.body["password"] as string,
+        queryResult.get("password")
+      ) == false
+    )
       return res.json(<IErrorResponse>{
         code: 1.4,
         message: "Wrong password.",
@@ -79,7 +83,7 @@ const checkUser = async (userData: IUser) => {
 };
 
 const createUser = async (userData: IUser) => {
-  userData.password = bcrypt.hashSync(userData.password);
+  userData.password = bcrypt.hashSync(userData.password, 15);
 
   return await userModel
     .create<IUser>(userData)
@@ -92,7 +96,7 @@ const deleteUser = async (
   res: Response,
   nextFn: NextFunction
 ) => {
-  let userId = req.query["userId"] as any;
+  let userId = req.body["userId"] as any;
 
   if (validateId(userId) != true) return res.json(validateId(userId));
 

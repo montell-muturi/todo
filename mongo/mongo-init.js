@@ -3,13 +3,13 @@ db.users.insertMany([
         _id: ObjectId("623ee48975da9b62d7f2e99e"),
         username: "JohnK.",
         email: "johnkamau@gmail.com",
-        password: "$2a$15$rTZYM6Qa7fUVRDGG6LcaIOJSc2ue3Sj..ws5Ij7IF.F3MZegeEiqG",
+        password: "$2a$15$am4KJZO6aR4y8rSzBFbfgOK03t4bby1cLnyH1vTmw7fpQgzrsKjiG",
     },
     {
         _id: ObjectId("623ee49a02158768ae15e762"),
         username: "JaneW.",
         email: "janewambui@yahoo.com",
-        password: "$2a$15$rTZYM6Qa7fUVRDGG6LcaIOJSc2ue3Sj..ws5Ij7IF.F3MZegeEiqG",
+        password: "$2a$15$am4KJZO6aR4y8rSzBFbfgOK03t4bby1cLnyH1vTmw7fpQgzrsKjiG",
     },
 ]);
 

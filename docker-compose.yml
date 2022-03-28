@@ -4,15 +4,17 @@ services:
   client:
     container_name: "client"
     image: montymuturi/todo-client
-    build: 
+    build:
       context: ./client/
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    links:
+      - "server"
   server:
     container_name: "server"
     image: montymuturi/todo-server
-    build: 
+    build:
       context: ./server/
       dockerfile: Dockerfile
     ports:

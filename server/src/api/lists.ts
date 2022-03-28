@@ -9,6 +9,7 @@ const todoModel = TodoModel;
 
 const getLists = async (req: Request, res: Response, nextFn: NextFunction) => {
   let userId = req.query["userId"] as string;
+
   if (validateId(userId) != true) return res.json(validateId(userId));
 
   let userTodo: Document = await todoModel
@@ -24,12 +25,12 @@ const createList = async (
   res: Response,
   nextFn: NextFunction
 ) => {
-  let userId = req.query["userId"] as string;
+  let userId = req.body["userId"] as string;
   if (validateId(userId) != true) return res.json(validateId(userId));
 
   let todoList: ITodos = {
     userId: userId,
-    title: req.query["title"] as string,
+    title: req.body["title"] as string,
     dateCreated: Date().toString(),
   };
 
@@ -46,22 +47,22 @@ const updateList = async (
   res: Response,
   nextFn: NextFunction
 ) => {
-  let listId = req.query["listId"] as string;
-  let title = req.query["title"] as string;
+  let listId = req.body["listId"] as string;
+  let title = req.body["title"] as string;
   if (validateId(listId) != true) return res.json(validateId(listId));
 
-  return res.json(
-    await todoModel
-      .findOneAndUpdate<ITodos>(
-        {
-          _id: new ObjectID(listId),
-        },
-        { $set: { title: title } },
-        { new: true }
-      )
-      .then((doc) => doc)
-      .catch((err) => err)
-  );
+  let updatedList = await todoModel
+    .findOneAndUpdate<ITodos>(
+      {
+        _id: new ObjectID(listId),
+      },
+      { $set: { title: title } },
+      { new: true }
+    )
+    .then((doc) => doc)
+    .catch((err) => err);
+
+  return res.json(updatedList);
 };
 
 const deleteList = async (
@@ -69,15 +70,15 @@ const deleteList = async (
   res: Response,
   nextFn: NextFunction
 ) => {
-  let listId = req.query["listId"] as string;
+  let listId = req.body["listId"] as string;
   if (validateId(listId) != true) return res.json(validateId(listId));
 
-  return res.json(
-    await todoModel
-      .findByIdAndDelete(listId, { new: true })
-      .then((doc) => doc)
-      .catch((err) => err)
-  );
+  let deletedList = await todoModel
+    .findByIdAndDelete(listId, { new: true })
+    .then((doc) => doc)
+    .catch((err) => err);
+
+  return res.json(deletedList);
 };
 
 export { getLists, createList, updateList, deleteList };

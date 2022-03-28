@@ -12,7 +12,7 @@ const createItem = async (
   res: Response,
   nextFn: NextFunction
 ) => {
-  let listId = req.query["listId"] as string;
+  let listId = req.body["listId"] as string;
   if (validateId(listId) != true) return res.json(validateId(listId));
 
   if (req.body["title"] == null)
@@ -45,8 +45,8 @@ const updateItem = async (
   res: Response,
   nextFn: NextFunction
 ) => {
-  let listId = req.query["listId"] as string;
-  let itemId = req.query["itemId"] as string;
+  let listId = req.body["listId"] as string;
+  let itemId = req.body["itemId"] as string;
   if (validateId(listId) != true) return res.json(validateId(listId));
   if (validateId(itemId) != true) return validateId(itemId);
 
@@ -75,8 +75,8 @@ const deleteItem = async (
   res: Response,
   nextFn: NextFunction
 ) => {
-  let listId = req.query["listId"] as string;
-  let itemId = req.query["itemId"] as string;
+  let listId = req.body["listId"] as string;
+  let itemId = req.body["itemId"] as string;
   if (validateId(listId) != true) return res.json(validateId(listId));
   if (validateId(itemId) != true) return validateId(itemId);
 
